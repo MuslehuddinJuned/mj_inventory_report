@@ -1,0 +1,186 @@
+<odoo>
+
+    <!-- Wizard View -->
+    <record id="view_imex_inventory_wizard" model="ir.ui.view">
+        <field name="name">imex.inventory.wizard.form</field>
+        <field name="model">imex.inventory.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Inventory Report">
+                <group>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                    <field name="location_id" options="{'no_create': True, 'no_create_edit': True}"/>
+                    <field name="product_ids" widget="many2many_tags" options="{'no_create': True, 'no_create_edit': True}"/>
+                    <field name="product_category_ids" widget="many2many_tags" options="{'no_create': True, 'no_create_edit': True}"/>
+                </group>
+                <footer>
+                    <button string="View Report"
+                            type="object"
+                            name="action_view_report"
+                            class="btn-primary"/>
+                    <button string="Cancel" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Wizard Action -->
+    <record id="action_imex_inventory_wizard" model="ir.actions.act_window">
+        <field name="name">Inventory Balance Sheet</field>
+        <field name="res_model">imex.inventory.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <!-- <field name="context">{'default_date_from': '2025-01-01'}</field> -->
+    </record>
+
+    <!-- Report list View -->
+    <record id="view_imex_inventory_report_list" model="ir.ui.view">
+        <field name="name">imex.inventory.report.list</field>
+        <field name="model">imex.inventory.report</field>
+        <field name="arch" type="xml">
+            <list string="Inventory In/Out Summary"
+                  create="false"
+                  edit="false"
+                  delete="false">
+
+                <field name="product_id"/>
+                <field name="product_uom"/>
+                <field name="standard_price"/>
+                <field name="product_category"/>
+                <field name="location"/>
+
+                <field name="initial"/>
+                <field name="product_in"/>
+                <field name="product_out"/>
+                <field name="balance"/>
+                <field name="total_value"/>
+                <button name="action_view_move_history"
+                    type="object"
+                    string="Move History"
+                    icon="fa-exchange"/>
+
+            </list>
+        </field>
+    </record>
+
+    <record id="view_imex_inventory_report_kanban" model="ir.ui.view">
+        <field name="name">imex.inventory.report.kanban</field>
+        <field name="model">imex.inventory.report</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" create="false">
+
+                <!-- REQUIRED: declare ALL fields used in template -->
+                <field name="product_id"/>
+                <field name="product_uom"/>
+                <field name="standard_price"/>
+                <field name="product_category"/>
+                <field name="location"/>
+                <field name="initial"/>
+                <field name="product_in"/>
+                <field name="product_out"/>
+                <field name="balance"/>
+                <field name="total_value"/>
+
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card">
+
+                            <strong>
+                                <t t-esc="record.product_id.value"/>
+                            </strong>
+                            <!-- <div class="mt8">
+                                <button name="action_open_product"
+                                        type="object"
+                                        class="btn btn-link btn-sm">
+                                    View Product
+                                </button>
+                            </div> -->
+
+                            <div class="text-muted">
+                                <t t-esc="record.product_category.value"/>
+                            </div>
+
+                            <div class="mt8">
+                                <div>Location: <t t-esc="record.location.value"/></div>
+                                <div>UOM: <t t-esc="record.product_uom.value"/></div>
+                            </div>
+
+                            <hr/>
+
+                            <div>Opening: <t t-esc="record.initial.value"/></div>
+                            <div>In: <t t-esc="record.product_in.value"/></div>
+                            <div>Out: <t t-esc="record.product_out.value"/></div>
+
+                            <strong>
+                                Balance: <t t-esc="record.balance.value"/>
+                            </strong>
+
+                            <div class="mt8">
+                                <div>Unit Price: <t t-esc="record.standard_price.value"/></div>
+                                <div>Value: <t t-esc="record.total_value.value"/></div>
+                            </div>
+
+                            <div class="mt8">
+                                <button type="object"
+                                        name="action_view_move_history"
+                                        class="btn btn-sm btn-primary">
+                                    Move History
+                                </button>
+                            </div>
+
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+
+    <!-- Search -->
+    <record id="view_imex_inventory_report_search" model="ir.ui.view">
+        <field name="name">imex.inventory.report.search</field>
+        <field name="model">imex.inventory.report</field>
+        <field name="arch" type="xml">
+            <search string="Inventory Summary">
+
+                <field name="product_id"/>
+                <field name="location"/>
+                <field name="product_category"/>
+                <separator string="Group By"/>
+                <filter name="group_product"
+                        string="Product"
+                        context="{'group_by': 'product_id'}"/>
+
+                <filter name="group_location"
+                        string="Location"
+                        context="{'group_by': 'location'}"/>
+
+                <filter name="group_category"
+                        string="Category"
+                        context="{'group_by': 'product_category'}"/>
+
+            </search>
+        </field>
+    </record>
+
+
+    <!-- Action -->
+    <record id="action_imex_inventory_report" model="ir.actions.act_window">
+        <field name="name">Inventory In/Out Summary</field>
+        <field name="res_model">imex.inventory.report</field>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="view_imex_inventory_report_list"/>
+        <field name="context">{}</field>
+        <field name="search_view_id" ref="view_imex_inventory_report_search"/>
+        <field name="target">current</field>
+    </record>
+    
+
+    <!-- Menu -->
+    <menuitem id="menu_imex_inventory_report"
+              name="Inventory In/Out Summary"
+              parent="stock.menu_warehouse_report"
+              sequence="250"
+              action="action_imex_inventory_wizard"/>
+
+</odoo>

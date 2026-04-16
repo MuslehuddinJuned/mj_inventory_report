@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_goods_receipts_report,goods.receipts.report,model_goods_receipts_report,,1,0,0,0
+access_imex_inventory_report,imex.inventory.report,model_imex_inventory_report,,1,1,1,1
+access_imex_inventory_wizard,imex.inventory.wizard,model_imex_inventory_wizard,,1,1,1,1

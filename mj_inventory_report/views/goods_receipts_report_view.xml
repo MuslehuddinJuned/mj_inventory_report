@@ -1,0 +1,69 @@
+<odoo>
+    <record id="view_goods_receipts_report_list" model="ir.ui.view">
+        <field name="name">goods.receipts.report.list</field>
+        <field name="model">goods.receipts.report</field>
+        <field name="arch" type="xml">
+            <list string="Goods Receipts Report" create="false" edit="false">
+                <field name="receive_date"/>
+                <field name="reference" optional="show"/>
+                <field name="location_id" optional="show"/>
+                <field name="location_dest_id" optional="show"/>
+                <field name="supplier_id" optional="show"/>
+                <field name="product_id"/>
+                <field name="product_uom_qty"/>
+                <field name="price_unit"/>
+                <field name="total_price"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_goods_receipts_report_pivot" model="ir.ui.view">
+        <field name="name">goods.receipts.report.pivot</field>
+        <field name="model">goods.receipts.report</field>
+        <field name="arch" type="xml">
+            <pivot string="Goods Receipts Report">
+                <field name="receive_date" type="row"/>
+                <field name="supplier_id" type="row"/>
+                <field name="product_id" type="row"/>
+                <field name="product_uom_qty" type="measure"/>
+                <field name="total_price" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_goods_receipts_report_search" model="ir.ui.view">
+        <field name="name">goods.receipts.report.search</field>
+        <field name="model">goods.receipts.report</field>
+        <field name="arch" type="xml">
+            <search string="Goods Receipts Report">
+                <field name="supplier_id"/>
+                <field name="product_id"/>
+                <filter string="Last 30 Days" name="last_30_days"
+                    domain="[('receive_date','>=', (context_today() - datetime.timedelta(days=30)))]"/>
+                <filter name="filter_receive_date" string="Receive Date" date="receive_date"/>
+                <separator string="Group By"/>
+                <filter string="Supplier" name="group_supplier" context="{'group_by':'supplier_id'}"/>
+                <filter string="Product" name="group_product" context="{'group_by':'product_id'}"/>
+                <filter string="Date" name="group_date" context="{'group_by':'receive_date'}"/>
+                <filter string="Reference" name="group_reference" context="{'group_by':'reference'}"/>
+                <filter string="From Location" name="group_location_id" context="{'group_by':'location_id'}"/>
+                <filter string="To Location" name="group_location_dest_id" context="{'group_by':'location_dest_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_goods_receipts_report" model="ir.actions.act_window">
+        <field name="name">Goods Receipts Report</field>
+        <field name="res_model">goods.receipts.report</field>
+        <field name="view_mode">list,pivot</field>
+        <field name="context">{}</field>
+        <field name="search_view_id" ref="view_goods_receipts_report_search"/>
+    </record>
+
+    <menuitem id="menu_goods_receipts_report_root"
+              name="Goods Receipts Report"
+              parent="stock.menu_warehouse_report"
+              action="action_goods_receipts_report"
+              sequence="240"/>
+
+</odoo>
