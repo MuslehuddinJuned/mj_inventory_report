@@ -6,7 +6,7 @@
                     1. Product-wise inventory report with opening, inward, outward and closing stock for a given date range and location. 
                     2. Material Receive Report (purchase) with date, supplier name, quantity, unit cost, total cost.
                 """,
-    'author': 'Muslehuddin Juned',
+    'author': 'Musleh Uddin Juned',
     'website': 'http://www.zachai-bachhai.com',
     "category": "Inventory",
     "depends": ["stock", 'purchase', 'purchase_stock'],
