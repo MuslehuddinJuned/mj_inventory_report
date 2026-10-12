@@ -191,19 +191,20 @@
                         string="Negative Balance"
                         domain="[('balance', '&lt;', 0)]"/>
 
-                <separator string="Group By"/>
-                <filter name="group_product"
-                        string="Product"
-                        context="{'group_by': 'product_id'}"/>
-                <filter name="group_location"
-                        string="Location"
-                        context="{'group_by': 'location'}"/>
-                <filter name="group_category"
-                        string="Category"
-                        context="{'group_by': 'product_category'}"/>
-                <filter name="group_uom"
-                        string="UoM"
-                        context="{'group_by': 'product_uom'}"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_product"
+                            string="Product"
+                            context="{'group_by': 'product_id'}"/>
+                    <filter name="group_location"
+                            string="Location"
+                            context="{'group_by': 'location'}"/>
+                    <filter name="group_category"
+                            string="Category"
+                            context="{'group_by': 'product_category'}"/>
+                    <filter name="group_uom"
+                            string="UoM"
+                            context="{'group_by': 'product_uom'}"/>
+                </group>
 
             </search>
         </field>

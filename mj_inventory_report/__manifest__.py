@@ -1,6 +1,6 @@
 {
     "name": "Inventory Report",
-    "version": "19.0.1.1.0",
+    "version": "18.0.1.1.0",
     "summary": "Comprehensive inventory reporting with product-wise stock movements and material receipt details.",
     "description":  """  
                     1. Product-wise inventory In/Out Summary with opening, inward, outward, closing stock and value for a given
