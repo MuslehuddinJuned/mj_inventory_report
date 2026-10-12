@@ -45,10 +45,10 @@ class ImexInventoryReport(models.Model):
     location = fields.Many2one("stock.location", string="Location", index=True, readonly=True)
 
     standard_price = fields.Float("Unit Cost", digits="Product Price", readonly=True)
-    initial = fields.Float("Opening", digits="Product Unit", readonly=True)
-    product_in = fields.Float("In", digits="Product Unit", readonly=True)
-    product_out = fields.Float("Out", digits="Product Unit", readonly=True)
-    balance = fields.Float("Balance", digits="Product Unit", readonly=True)
+    initial = fields.Float("Opening", digits="Product Unit of Measure", readonly=True)
+    product_in = fields.Float("In", digits="Product Unit of Measure", readonly=True)
+    product_out = fields.Float("Out", digits="Product Unit of Measure", readonly=True)
+    balance = fields.Float("Balance", digits="Product Unit of Measure", readonly=True)
     total_value = fields.Float("Total Value", digits="Product Price", readonly=True)
 
     # ------------------------------------------------------------------

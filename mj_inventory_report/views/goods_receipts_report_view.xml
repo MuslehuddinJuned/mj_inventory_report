@@ -52,14 +52,15 @@
                 <filter string="Last 30 Days" name="last_30_days"
                     domain="[('receive_date','>=', (context_today() - datetime.timedelta(days=30)))]"/>
                 <filter name="filter_receive_date" string="Receive Date" date="receive_date"/>
-                <separator string="Group By"/>
-                <filter string="Supplier" name="group_supplier" context="{'group_by':'supplier_id'}"/>
-                <filter string="Product" name="group_product" context="{'group_by':'product_id'}"/>
-                <filter string="Date" name="group_date" context="{'group_by':'receive_date'}"/>
-                <filter string="Reference" name="group_reference" context="{'group_by':'reference'}"/>
-                <filter string="Purchase Order" name="group_purchase_order" context="{'group_by':'purchase_order_id'}"/>
-                <filter string="From Location" name="group_location_id" context="{'group_by':'location_id'}"/>
-                <filter string="To Location" name="group_location_dest_id" context="{'group_by':'location_dest_id'}"/>
+                <group expand="0" string="Group By">
+                    <filter string="Supplier" name="group_supplier" context="{'group_by':'supplier_id'}"/>
+                    <filter string="Product" name="group_product" context="{'group_by':'product_id'}"/>
+                    <filter string="Date" name="group_date" context="{'group_by':'receive_date'}"/>
+                    <filter string="Reference" name="group_reference" context="{'group_by':'reference'}"/>
+                    <filter string="Purchase Order" name="group_purchase_order" context="{'group_by':'purchase_order_id'}"/>
+                    <filter string="From Location" name="group_location_id" context="{'group_by':'location_id'}"/>
+                    <filter string="To Location" name="group_location_dest_id" context="{'group_by':'location_dest_id'}"/>
+                </group>
             </search>
         </field>
     </record>
