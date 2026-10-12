@@ -8,7 +8,7 @@
                     2. Material Receive Report (purchase) with date, supplier name, quantity, unit, unit cost, total cost.
                        Only validated (Done) receipts created from a Purchase Order are included.
                 """,
-    'author': 'Muslehuddin Juned',
+    'author': 'Musleh Uddin Juned',
     'website': 'http://www.zachai-bachhai.com',
     "category": "Inventory",
     "depends": ["stock", 'purchase', 'purchase_stock'],
