@@ -52,7 +52,7 @@
                 <filter string="Last 30 Days" name="last_30_days"
                     domain="[('receive_date','>=', (context_today() - datetime.timedelta(days=30)))]"/>
                 <filter name="filter_receive_date" string="Receive Date" date="receive_date"/>
-                <group expand="0" string="Group By">
+                <group>
                     <filter string="Supplier" name="group_supplier" context="{'group_by':'supplier_id'}"/>
                     <filter string="Product" name="group_product" context="{'group_by':'product_id'}"/>
                     <filter string="Date" name="group_date" context="{'group_by':'receive_date'}"/>

@@ -1,6 +1,6 @@
 {
     "name": "Inventory Report",
-    "version": "18.0.1.1.0",
+    "version": "20.0.1.1.0",
     "summary": "Comprehensive inventory reporting with product-wise stock movements and material receipt details.",
     "description":  """  
                     1. Product-wise inventory In/Out Summary with opening, inward, outward, closing stock and value for a given
@@ -13,7 +13,7 @@
     "category": "Inventory",
     "depends": ["stock", 'purchase', 'purchase_stock'],
     "data": [
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         'views/goods_receipts_report_view.xml',
         'views/imex_inventory_views.xml',
         'report/imex_inventory_report.xml',

@@ -93,59 +93,30 @@
         <field name="model">imex.inventory.report</field>
         <field name="arch" type="xml">
             <kanban class="o_kanban_mobile" create="false" sample="0">
-
-                <field name="product_id"/>
-                <field name="product_uom"/>
-                <field name="standard_price"/>
-                <field name="product_category"/>
-                <field name="location"/>
-                <field name="initial"/>
-                <field name="product_in"/>
-                <field name="product_out"/>
-                <field name="balance"/>
-                <field name="total_value"/>
-
                 <templates>
-                    <t t-name="kanban-box">
-                        <div class="oe_kanban_card">
-
-                            <strong>
-                                <t t-esc="record.product_id.value"/>
-                            </strong>
-
-                            <div class="text-muted">
-                                <t t-esc="record.product_category.value"/>
-                            </div>
-
-                            <div class="mt8">
-                                <div>Location: <t t-esc="record.location.value"/></div>
-                                <div>UOM: <t t-esc="record.product_uom.value"/></div>
-                            </div>
-
-                            <hr/>
-
-                            <div>Opening: <t t-esc="record.initial.value"/></div>
-                            <div>In: <t t-esc="record.product_in.value"/></div>
-                            <div>Out: <t t-esc="record.product_out.value"/></div>
-
-                            <strong>
-                                Balance: <t t-esc="record.balance.value"/>
-                            </strong>
-
-                            <div class="mt8">
-                                <div>Unit Cost: <t t-esc="record.standard_price.value"/></div>
-                                <div>Value: <t t-esc="record.total_value.value"/></div>
-                            </div>
-
-                            <div class="mt8">
-                                <button type="object"
-                                        name="action_view_move_history"
-                                        class="btn btn-sm btn-primary">
-                                    Move History
-                                </button>
-                            </div>
-
+                    <t t-name="card">
+                        <field name="product_id" class="fw-bold"/>
+                        <field name="product_category" class="text-muted"/>
+                        <div class="mt-2">
+                            <div>Location: <field name="location"/></div>
+                            <div>UoM: <field name="product_uom"/></div>
                         </div>
+                        <hr class="my-2"/>
+                        <div>Opening: <field name="initial"/></div>
+                        <div>In: <field name="product_in"/></div>
+                        <div>Out: <field name="product_out"/></div>
+                        <div class="fw-bold">Balance: <field name="balance"/></div>
+                        <div class="mt-2">
+                            <div>Unit Cost: <field name="standard_price"/></div>
+                            <div>Value: <field name="total_value"/></div>
+                        </div>
+                        <footer class="mt-2">
+                            <button type="object"
+                                    name="action_view_move_history"
+                                    class="btn btn-sm btn-primary">
+                                Move History
+                            </button>
+                        </footer>
                     </t>
                 </templates>
             </kanban>
@@ -191,7 +162,7 @@
                         string="Negative Balance"
                         domain="[('balance', '&lt;', 0)]"/>
 
-                <group expand="0" string="Group By">
+                <group>
                     <filter name="group_product"
                             string="Product"
                             context="{'group_by': 'product_id'}"/>

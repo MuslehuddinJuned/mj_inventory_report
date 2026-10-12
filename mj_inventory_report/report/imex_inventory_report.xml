@@ -6,7 +6,6 @@
         <field name="model">imex.inventory.report</field>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">mj_inventory_report.imex_inventory_report_pdf</field>
-        <field name="report_file">mj_inventory_report.imex_inventory_report_pdf</field>
         <field name="binding_model_id" ref="model_imex_inventory_report"/>
         <field name="binding_type">report</field>
         <field name="print_report_name">'Inventory In-Out Summary'</field>

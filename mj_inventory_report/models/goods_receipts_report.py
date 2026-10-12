@@ -39,7 +39,7 @@ class GoodsReceiptsReport(models.Model):
                     sm.date AS receive_date,
                     COALESCE(po.partner_id, sp.partner_id) AS supplier_id,
                     sm.product_id AS product_id,
-                    sm.product_uom AS product_uom,
+                    sm.uom_id AS product_uom,
                     sm.quantity AS product_uom_qty,
                     COALESCE(pol.price_unit, sm.price_unit, 0.0) AS price_unit,
                     sm.quantity * COALESCE(pol.price_unit, sm.price_unit, 0.0) AS total_price,
