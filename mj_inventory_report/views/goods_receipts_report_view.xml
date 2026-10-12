@@ -6,13 +6,16 @@
             <list string="Goods Receipts Report" create="false" edit="false">
                 <field name="receive_date"/>
                 <field name="reference" optional="show"/>
+                <field name="purchase_order_id" optional="show"/>
                 <field name="location_id" optional="show"/>
                 <field name="location_dest_id" optional="show"/>
                 <field name="supplier_id" optional="show"/>
                 <field name="product_id"/>
+                <field name="product_uom"/>
                 <field name="product_uom_qty"/>
                 <field name="price_unit"/>
-                <field name="total_price"/>
+                <field name="total_price" sum="Total"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
             </list>
         </field>
     </record>
@@ -25,6 +28,7 @@
                 <field name="receive_date" type="row"/>
                 <field name="supplier_id" type="row"/>
                 <field name="product_id" type="row"/>
+                <field name="product_uom" type="row"/>
                 <field name="product_uom_qty" type="measure"/>
                 <field name="total_price" type="measure"/>
             </pivot>
@@ -38,6 +42,13 @@
             <search string="Goods Receipts Report">
                 <field name="supplier_id"/>
                 <field name="product_id"/>
+                <field name="reference"/>
+                <field name="purchase_order_id"/>
+                <filter string="From Purchase Orders" name="from_purchase"
+                    domain="[('purchase_order_id', '!=', False)]"/>
+                <filter string="Without Purchase Order" name="without_purchase"
+                    domain="[('purchase_order_id', '=', False)]"/>
+                <separator/>
                 <filter string="Last 30 Days" name="last_30_days"
                     domain="[('receive_date','>=', (context_today() - datetime.timedelta(days=30)))]"/>
                 <filter name="filter_receive_date" string="Receive Date" date="receive_date"/>
@@ -46,6 +57,7 @@
                 <filter string="Product" name="group_product" context="{'group_by':'product_id'}"/>
                 <filter string="Date" name="group_date" context="{'group_by':'receive_date'}"/>
                 <filter string="Reference" name="group_reference" context="{'group_by':'reference'}"/>
+                <filter string="Purchase Order" name="group_purchase_order" context="{'group_by':'purchase_order_id'}"/>
                 <filter string="From Location" name="group_location_id" context="{'group_by':'location_id'}"/>
                 <filter string="To Location" name="group_location_dest_id" context="{'group_by':'location_dest_id'}"/>
             </search>
@@ -58,6 +70,19 @@
         <field name="view_mode">list,pivot</field>
         <field name="context">{}</field>
         <field name="search_view_id" ref="view_goods_receipts_report_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No goods received from purchase orders yet
+            </p>
+            <p>
+                This report only lists receipts that were <b>created from a Purchase Order</b>
+                and are in the <b>Done</b> state (validated).
+            </p>
+            <p>
+                Receipts created manually in Inventory (without a Purchase Order),
+                and receipts that are still Draft, Waiting or Ready, are not shown.
+            </p>
+        </field>
     </record>
 
     <menuitem id="menu_goods_receipts_report_root"

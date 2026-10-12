@@ -1,15 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <odoo>
 
-    <!-- Wizard View -->
+    <!-- ============================================================ -->
+    <!-- Wizard (optional: custom period / scope)                     -->
+    <!-- ============================================================ -->
     <record id="view_imex_inventory_wizard" model="ir.ui.view">
         <field name="name">imex.inventory.wizard.form</field>
         <field name="model">imex.inventory.wizard</field>
         <field name="arch" type="xml">
             <form string="Inventory Report">
                 <group>
-                    <field name="date_from"/>
-                    <field name="date_to"/>
-                    <field name="location_id" options="{'no_create': True, 'no_create_edit': True}"/>
+                    <group string="Date Range">
+                        <field name="period"/>
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                    </group>
+                </group>
+                <group string="Scope">
+                    <field name="location_id"
+                           options="{'no_create': True, 'no_create_edit': True}"
+                           placeholder="All internal locations"/>
+                    <field name="barcode" placeholder="Scan a product barcode to add it"/>
                     <field name="product_ids" widget="many2many_tags" options="{'no_create': True, 'no_create_edit': True}"/>
                     <field name="product_category_ids" widget="many2many_tags" options="{'no_create': True, 'no_create_edit': True}"/>
                 </group>
@@ -24,16 +35,17 @@
         </field>
     </record>
 
-    <!-- Wizard Action -->
     <record id="action_imex_inventory_wizard" model="ir.actions.act_window">
-        <field name="name">Inventory Balance Sheet</field>
+        <field name="name">Inventory Summary (Select Date Range)</field>
         <field name="res_model">imex.inventory.wizard</field>
         <field name="view_mode">form</field>
+        <field name="view_id" ref="view_imex_inventory_wizard"/>
         <field name="target">new</field>
-        <!-- <field name="context">{'default_date_from': '2025-01-01'}</field> -->
     </record>
 
-    <!-- Report list View -->
+    <!-- ============================================================ -->
+    <!-- Report views                                                 -->
+    <!-- ============================================================ -->
     <record id="view_imex_inventory_report_list" model="ir.ui.view">
         <field name="name">imex.inventory.report.list</field>
         <field name="model">imex.inventory.report</field>
@@ -41,24 +53,37 @@
             <list string="Inventory In/Out Summary"
                   create="false"
                   edit="false"
-                  delete="false">
+                  delete="false"
+                  sample="0">
+
+                <header>
+                    <button name="action_change_period"
+                            type="object"
+                            string="Change Period"
+                            display="always"
+                            class="btn-secondary"/>
+                </header>
 
                 <field name="product_id"/>
                 <field name="product_uom"/>
-                <field name="standard_price"/>
+                <field name="standard_price" optional="show"/>
                 <field name="product_category"/>
                 <field name="location"/>
 
-                <field name="initial"/>
-                <field name="product_in"/>
-                <field name="product_out"/>
-                <field name="balance"/>
-                <field name="total_value"/>
-                <button name="action_view_move_history"
-                    type="object"
-                    string="Move History"
-                    icon="fa-exchange"/>
+                <field name="initial" sum="Opening"/>
+                <field name="product_in" sum="In"/>
+                <field name="product_out" sum="Out"/>
+                <field name="balance" sum="Balance"/>
+                <field name="total_value" sum="Total Value"/>
 
+                <field name="date_from" optional="hide"/>
+                <field name="date_to" optional="hide"/>
+                <field name="user_id" column_invisible="1"/>
+
+                <button name="action_view_move_history"
+                        type="object"
+                        string="Move History"
+                        icon="fa-exchange"/>
             </list>
         </field>
     </record>
@@ -67,9 +92,8 @@
         <field name="name">imex.inventory.report.kanban</field>
         <field name="model">imex.inventory.report</field>
         <field name="arch" type="xml">
-            <kanban class="o_kanban_mobile" create="false">
+            <kanban class="o_kanban_mobile" create="false" sample="0">
 
-                <!-- REQUIRED: declare ALL fields used in template -->
                 <field name="product_id"/>
                 <field name="product_uom"/>
                 <field name="standard_price"/>
@@ -88,13 +112,6 @@
                             <strong>
                                 <t t-esc="record.product_id.value"/>
                             </strong>
-                            <!-- <div class="mt8">
-                                <button name="action_open_product"
-                                        type="object"
-                                        class="btn btn-link btn-sm">
-                                    View Product
-                                </button>
-                            </div> -->
 
                             <div class="text-muted">
                                 <t t-esc="record.product_category.value"/>
@@ -116,7 +133,7 @@
                             </strong>
 
                             <div class="mt8">
-                                <div>Unit Price: <t t-esc="record.standard_price.value"/></div>
+                                <div>Unit Cost: <t t-esc="record.standard_price.value"/></div>
                                 <div>Value: <t t-esc="record.total_value.value"/></div>
                             </div>
 
@@ -135,8 +152,25 @@
         </field>
     </record>
 
+    <record id="view_imex_inventory_report_pivot" model="ir.ui.view">
+        <field name="name">imex.inventory.report.pivot</field>
+        <field name="model">imex.inventory.report</field>
+        <field name="arch" type="xml">
+            <pivot string="Inventory In/Out Summary" sample="0">
+                <field name="product_category" type="row"/>
+                <field name="location" type="col"/>
+                <field name="initial" type="measure"/>
+                <field name="product_in" type="measure"/>
+                <field name="product_out" type="measure"/>
+                <field name="balance" type="measure"/>
+                <field name="total_value" type="measure"/>
+            </pivot>
+        </field>
+    </record>
 
-    <!-- Search -->
+    <!-- ============================================================ -->
+    <!-- Search view                                                  -->
+    <!-- ============================================================ -->
     <record id="view_imex_inventory_report_search" model="ir.ui.view">
         <field name="name">imex.inventory.report.search</field>
         <field name="model">imex.inventory.report</field>
@@ -144,43 +178,71 @@
             <search string="Inventory Summary">
 
                 <field name="product_id"/>
-                <field name="location"/>
                 <field name="product_category"/>
+                <field name="location"/>
+
+                <filter name="filter_with_movement"
+                        string="With Movement"
+                        domain="['|', ('product_in', '!=', 0), ('product_out', '!=', 0)]"/>
+                <filter name="filter_balance_nonzero"
+                        string="Balance ≠ 0"
+                        domain="[('balance', '!=', 0)]"/>
+                <filter name="filter_negative_balance"
+                        string="Negative Balance"
+                        domain="[('balance', '&lt;', 0)]"/>
+
                 <separator string="Group By"/>
                 <filter name="group_product"
                         string="Product"
                         context="{'group_by': 'product_id'}"/>
-
                 <filter name="group_location"
                         string="Location"
                         context="{'group_by': 'location'}"/>
-
                 <filter name="group_category"
                         string="Category"
                         context="{'group_by': 'product_category'}"/>
+                <filter name="group_uom"
+                        string="UoM"
+                        context="{'group_by': 'product_uom'}"/>
 
             </search>
         </field>
     </record>
 
+    <!-- ============================================================ -->
+    <!-- Actions                                                      -->
+    <!-- ============================================================ -->
 
-    <!-- Action -->
+    <!-- Plain act_window, used when the rows are already generated -->
     <record id="action_imex_inventory_report" model="ir.actions.act_window">
         <field name="name">Inventory In/Out Summary</field>
         <field name="res_model">imex.inventory.report</field>
-        <field name="view_mode">list</field>
+        <field name="view_mode">list,kanban,pivot</field>
         <field name="view_id" ref="view_imex_inventory_report_list"/>
-        <field name="context">{}</field>
         <field name="search_view_id" ref="view_imex_inventory_report_search"/>
+        <field name="domain">[('user_id', '=', uid)]</field>
+        <field name="context">{}</field>
         <field name="target">current</field>
     </record>
-    
 
-    <!-- Menu -->
+    <!-- Menu entry point: rebuild the rows, then open the list -->
+    <record id="action_imex_inventory_report_generate" model="ir.actions.server">
+        <field name="name">Inventory In/Out Summary</field>
+        <field name="model_id" ref="model_imex_inventory_report"/>
+        <field name="state">code</field>
+        <field name="code">action = model.action_open_report()</field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Menus                                                        -->
+    <!-- ============================================================ -->
     <menuitem id="menu_imex_inventory_report"
               name="Inventory In/Out Summary"
               parent="stock.menu_warehouse_report"
               sequence="250"
-              action="action_imex_inventory_wizard"/>
+              action="action_imex_inventory_report_generate"/>
+
+    <!-- No separate menu for the date range: the report's own "Change Period"
+         button opens the same wizard (see action_change_period). -->
 
 </odoo>
